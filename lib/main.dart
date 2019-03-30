@@ -36,8 +36,17 @@ class MyApp extends StatelessWidget {
             future: posts,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data.posts.first.title);
+                int length = snapshot.data.posts.length;
+                debugPrint("has data: length=$length");
+                return ListView.builder(
+                    itemCount: snapshot.data.posts.length,
+                    padding: const EdgeInsets.all(16.0),
+                    itemBuilder: (BuildContext _context, int i) {
+                      return PostCard(post: snapshot.data.posts[i]);
+                    }
+                );
               } else if (snapshot.hasError) {
+                debugPrint("Has Error ${snapshot.error}");
                 return Text("${snapshot.error}");
               }
 
@@ -48,4 +57,20 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
+}
+
+class PostCard extends StatelessWidget {
+
+  final Post post;
+
+  PostCard({Key key, this.post}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+    return ListTile(
+      title: Text(post.title),
+      subtitle: Text(post.slug),
+    );
+  }
 }
