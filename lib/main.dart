@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_blogger_app/Post.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_html/flutter_html.dart';
+
 
 Future<PostResponse> fetchPost() async {
   final response = await http.get('http://blacktaxandwhitebenefits.com/wp-json/wp/v2/posts?_embed');
@@ -70,7 +72,7 @@ class PostCard extends StatelessWidget {
 
     return ListTile(
       title: Text(post.title),
-      subtitle: Text(post.slug),
+      subtitle: Html(data: post.excerpt),
     );
   }
 }

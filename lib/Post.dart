@@ -1,3 +1,5 @@
+import 'package:html_unescape/html_unescape.dart';
+
 class PostResponse {
   final List<Post> posts;
 
@@ -7,13 +9,19 @@ class PostResponse {
 }
 
 class Post {
-  final String slug;
+  final String excerpt;
   final String title;
 
-  Post({this.slug, this.title});
+  Post({this.excerpt, this.title});
 
-  factory Post.fromJson(Map<String, dynamic> json) => Post(
-      title: json['title']['rendered'],
-      slug: json['slug'],
+  factory Post.fromJson(Map<String, dynamic> json) {
+    String excerpt = json['excerpt']['rendered'] ?? "";
+    String title = json['title']['rendered'];
+    title = HtmlUnescape().convert(title);
+    excerpt = HtmlUnescape().convert(excerpt);
+    return Post(
+      title: title,
+      excerpt: excerpt,
     );
+  }
 }
