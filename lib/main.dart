@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blogger_app/Post.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_html/flutter_html.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 Future<PostResponse> fetchPost() async {
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
                 debugPrint("has data: length=$length");
                 return ListView.builder(
                     itemCount: snapshot.data.posts.length,
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(8.0),
                     itemBuilder: (BuildContext _context, int i) {
                       return PostCard(post: snapshot.data.posts[i]);
                     }
@@ -70,9 +71,21 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ListTile(
-      title: Text(post.title),
-      subtitle: Html(data: post.excerpt),
+    return Card(
+      child: ListTile(
+        title: Text(post.title),
+        subtitle: Html(data: post.excerpt),
+        onTap: () => _launchURL(post.link),
+      ),
     );
+  }
+}
+
+
+_launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }

@@ -11,8 +11,9 @@ class PostResponse {
 class Post {
   final String excerpt;
   final String title;
+  final String link;
 
-  Post({this.excerpt, this.title});
+  Post({this.excerpt, this.title, this.link});
 
   factory Post.fromJson(Map<String, dynamic> json) {
     String excerpt = json['excerpt']['rendered'] ?? "";
@@ -22,6 +23,7 @@ class Post {
     return Post(
       title: title,
       excerpt: excerpt,
+      link: json['link']
     );
   }
 }
