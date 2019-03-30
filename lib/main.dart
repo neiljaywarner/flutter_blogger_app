@@ -13,11 +13,10 @@ Future<PostResponse> fetchPost() async {
     return PostResponse.fromJson(json.decode(response.body));
   } else {
     // If that call was not successful, throw an error.
-    throw Exception('Failed to load post');
+    //todo: fimber and crashlytics
+    throw Exception('Failed to load posts');
   }
 }
-
-
 
 void main() => runApp(MyApp(posts: fetchPost()));
 
@@ -27,16 +26,11 @@ class MyApp extends StatelessWidget {
   MyApp({Key key, this.posts}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
       title: 'Black Tax White Benefits',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Black Tax White Benefits'),
-        ),
+        appBar: AppBar(title: Text('Black Tax White Benefits')),
         body: Center(
           child: FutureBuilder<PostResponse>(
             future: posts,
@@ -54,5 +48,4 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
 }
