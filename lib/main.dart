@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 
 Future<PostResponse> fetchPost() async {
-  final response = await http.get('http://blacktaxandwhitebenefits.com/wp-json/wp/v2/posts?_embed');
+  final response = await http.get('http://gordonferguson.org/wp-json/wp/v2/posts');
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
@@ -30,10 +30,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-      title: 'Black Tax White Benefits',
+      title: 'Gordon Ferguson',
       theme: ThemeData(primarySwatch: Colors.blue),
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(title: Text('Black Tax White Benefits')),
+        appBar: AppBar(title: Text('Gordon Ferguson')),
         body: Center(
           child: FutureBuilder<PostResponse>(
             future: posts,

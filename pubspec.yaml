@@ -36,7 +36,8 @@ dev_dependencies:
 
 flutter_icons:
   ios: true
-  image_path: "assets/icon/squarehands-1024.png"
+  android: true
+  image_path: "assets/icon/GF.png"
 
 
 # For information on the generic Dart part of this file, see the
