@@ -12,9 +12,13 @@ class Post {
   final String excerpt;
   final String title;
   final String link;
+  final String imageUrl;
 
-  Post({this.excerpt, this.title, this.link});
+  Post({this.excerpt, this.title, this.link, this.imageUrl});
 
+  // TODO: Consider when to embed if ever?
+  // eg is jetpack_featured_media_url good enough
+  // or we could use smaller images for thumbnails...
   factory Post.fromJson(Map<String, dynamic> json) {
     String excerpt = json['excerpt']['rendered'] ?? "";
     String title = json['title']['rendered'];
@@ -23,7 +27,8 @@ class Post {
     return Post(
       title: title,
       excerpt: excerpt,
-      link: json['link']
+      link: json['link'],
+      imageUrl: json['jetpack_featured_media_url']
     );
   }
 }
