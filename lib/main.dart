@@ -3,11 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blogger_app/Post.dart';
+import 'package:flutter_blogger_app/article_detail.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_html/flutter_html.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 
 Future<PostResponse> fetchPost() async {
   final response = await http.get('http://blacktaxandwhitebenefits.com/wp-json/wp/v2/posts?per_page=100');
@@ -70,9 +69,7 @@ class PostCard extends StatelessWidget {
   PostCard({Key key, this.post}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-
-    return Card(
+  Widget build(BuildContext context) => Card(
       child: Column(
         children: <Widget>[
           CachedNetworkImage(
@@ -85,19 +82,13 @@ class PostCard extends StatelessWidget {
             child: ListTile(
               title: Text(post.title),
               subtitle: Html(data: post.excerpt),
-              onTap: () => _launchURL(post.link),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(post: post))),
             ),
           ),
         ],
       ),
     );
-  }
 }
 
-_launchURL(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
+
+
