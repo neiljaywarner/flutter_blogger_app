@@ -17,7 +17,6 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: Text("Black Tax White Benefits"),
-          backgroundColor: Colors.redAccent,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.share),
@@ -42,7 +41,7 @@ class DetailScreen extends StatelessWidget {
                           style: new TextStyle(
                               fontSize: 16.0, fontWeight: FontWeight.bold),
                         )),
-                    Padding(padding: EdgeInsets.all(4.0), child: Html(data: post.content)),
+                    Padding(padding: EdgeInsets.all(16.0), child: Html(data: post.content)),
                   ],
                 ),
               )
