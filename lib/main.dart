@@ -23,11 +23,26 @@ Future<PostResponse> fetchPost() async {
 
 void main() => runApp(MyApp(posts: fetchPost()));
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final Future<PostResponse> posts;
 
   MyApp({Key key, this.posts}) : super(key: key);
 
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int _selectedIndex = 1;
+  List<Widget> _tabContent = <Widget>[];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _tabContent.add(ArticleFutureBuilder(posts: widget.posts));
+    _tabContent.add(Center(child: Text("No favorites at this time.")));
+  }
   @override
   Widget build(BuildContext context) => MaterialApp(
       title: 'Black Tax White Benefits',
@@ -35,31 +50,58 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: Text('Black Tax White Benefits')),
         body: Center(
-          child: FutureBuilder<PostResponse>(
-            future: posts,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                int length = snapshot.data.posts.length;
-                debugPrint("has data: length=$length");
-                return ListView.builder(
-                    itemCount: snapshot.data.posts.length,
-                    padding: const EdgeInsets.all(8.0),
-                    itemBuilder: (BuildContext _context, int i) {
-                      return PostCard(post: snapshot.data.posts[i]);
-                    }
-                );
-              } else if (snapshot.hasError) {
-                debugPrint("Has Error ${snapshot.error}");
-                return Text('Error loading posts.');
-              }
-
-              // By default, show a loading spinner
-              return CircularProgressIndicator();
-            },
-          ),
+          child: _tabContent[_selectedIndex] ,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
+            BottomNavigationBarItem(icon: Icon(Icons.star_border), title: Text('Favorites')),
+          ],
+          currentIndex: _selectedIndex,
+          fixedColor: Colors.deepPurple,
+          onTap: _onItemTapped,
         ),
       ),
     );
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+}
+
+class ArticleFutureBuilder extends StatelessWidget {
+  const ArticleFutureBuilder({
+    Key key,
+    @required this.posts,
+  }) : super(key: key);
+
+  final Future<PostResponse> posts;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<PostResponse>(
+      future: posts,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          int length = snapshot.data.posts.length;
+          debugPrint("has data: length=$length");
+          return ListView.builder(
+              itemCount: snapshot.data.posts.length,
+              padding: const EdgeInsets.all(8.0),
+              itemBuilder: (BuildContext _context, int i) => PostCard(post: snapshot.data.posts[i])
+          );
+        } else if (snapshot.hasError) {
+          debugPrint("Has Error ${snapshot.error}");
+          return Text('Error loading posts.');
+        }
+
+        // By default, show a loading spinner
+        return CircularProgressIndicator();
+      },
+    );
+  }
 }
 
 class PostCard extends StatelessWidget {
@@ -89,6 +131,3 @@ class PostCard extends StatelessWidget {
       ),
     );
 }
-
-
-
