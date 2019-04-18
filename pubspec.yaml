@@ -32,6 +32,7 @@ dependencies:
   url_launcher: ^5.0.2
   cached_network_image: ^0.7.0
   share: ^0.5.3
+  localstorage: ^1.2.0
 
 
 dev_dependencies:

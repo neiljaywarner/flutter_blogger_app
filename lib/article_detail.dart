@@ -5,8 +5,6 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 
-//TODO: 1.Spinner, 2) unescape with dart class
-// 3. futurebuilder.
 class DetailScreen extends StatelessWidget {
   final Post post;
 

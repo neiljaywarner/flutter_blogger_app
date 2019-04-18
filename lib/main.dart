@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
             BottomNavigationBarItem(icon: Icon(Icons.star_border), title: Text('Favorites')),
           ],
           currentIndex: _selectedIndex,
-          fixedColor: Colors.deepPurple,
+          fixedColor: Theme.of(context).accentColor,
           onTap: _onItemTapped,
         ),
       ),
