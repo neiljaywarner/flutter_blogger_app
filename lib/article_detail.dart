@@ -20,9 +20,9 @@ class DetailScreen extends StatefulWidget {
 
 
 class _DetailScreenState extends State<DetailScreen> {
-  final LocalStorage storage = new LocalStorage('btwb_posts');
+  final LocalStorage storage = new LocalStorage('btwb151');
   var _shareMessage;
-  List<Post> favorites = List<Post>();
+  List<String> favorites = List<String>();
 
   int length;
 
@@ -39,7 +39,7 @@ class _DetailScreenState extends State<DetailScreen> {
       future: storage.ready,
       builder: (context, snapshot) {
         if (storage.getItem("my_favorites") != null)  {
-          favorites = FavoritesList.fromLocalStorageJson(storage.getItem("my_favorites")).favorites;
+          favorites = storage.getItem("my_favorites");
         }
         length = favorites.length;
         print('num favorites=$length');
@@ -87,18 +87,19 @@ class _DetailScreenState extends State<DetailScreen> {
 
   void toggleFavorite(Post post) async {
     await storage.ready;
-    if (favorites.contains(post)) {
-      print("remove b/c favorites has post ${post.title}");
-      favorites.remove(post);
+    if (favorites.contains(post.slug)) {
+      print("remove b/c favorites has post ${post.slug}");
+      favorites.remove(post.slug);
     } else {
-      print("add b/c favorites does not have post ${post.title}");
-      favorites.add(post);
+      print("add b/c favorites does not have post ${post.slug}");
+      favorites.add(post.slug);
     }
     if (favorites.length==0) {
       print("favorites empty; clear storage");
       storage.clear();
     } else {
-      storage.setItem("my_favorites", FavoritesList(favorites).toJSONEncodable());
+      print("About to set my favorites to $favorites}");
+      storage.setItem("my_favorites", favorites);
     }
     setState(() {
       print("rebuilding after toggling favorite");

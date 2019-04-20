@@ -2,13 +2,11 @@
 import 'package:flutter_blogger_app/Post.dart';
 
 class FavoritesList {
-  final List<Post> favorites;
+  final List<String> favoriteSlugs;
 
-  FavoritesList(this.favorites);
+  FavoritesList(this.favoriteSlugs);
 
-  List<Map<String,dynamic>> toJSONEncodable() => favorites.map((post) => post.toJSONEncodable()).toList();
-
-  factory FavoritesList.fromLocalStorageJson(List<dynamic> localJson) => FavoritesList(localJson.map((i)=>Post.fromLocalStorageJson(i)).toList());
+  bool hasPost(Post favorite) => favoriteSlugs.any((currentSlug) => (currentSlug == favorite.slug));
 
   //factory PostResponse.fromJson(List<dynamic> parsedJson) => new PostResponse(parsedJson.map((i)=>Post.fromJson(i)).toList());
 

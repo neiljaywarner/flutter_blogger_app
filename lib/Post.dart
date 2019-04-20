@@ -51,7 +51,7 @@ class Post {
     m['excerpt'] = excerpt;
     m['link'] = link;
     m['imageUrl'] = imageUrl;
-    m[content] = content;
+    m['content'] = content;
 
     return m;
   }
@@ -61,6 +61,6 @@ class Post {
       excerpt: localJson['excerpt'],
       link: localJson['link'],
       imageUrl: localJson['imageUrl'],
-      content: localJson['cntent']
+      content: localJson['content']
     );
 }
