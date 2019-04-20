@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
-            BottomNavigationBarItem(icon: Icon(Icons.star_border), title: Text('Favorites')),
+            BottomNavigationBarItem(icon: Icon(Icons.star), title: Text('Favorites')),
           ],
           currentIndex: _selectedIndex,
           fixedColor: Theme.of(context).accentColor,
