@@ -35,14 +35,20 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
-  List<Widget> _tabContent = <Widget>[];
-
+  ArticleFutureBuilder home;
 
   @override
   void initState() {
     super.initState();
-    _tabContent.add(ArticleFutureBuilder(posts: widget.posts));
-    _tabContent.add(ArticleFutureBuilder(posts: DBProvider.db.getAllFavorites()));
+    home = ArticleFutureBuilder(posts: widget.posts);
+  }
+
+  ArticleFutureBuilder _buildFavoritesWidget(int selectedIndex) {
+    if (selectedIndex==1) {
+      return ArticleFutureBuilder(posts: DBProvider.db.getAllFavorites());
+    } else {
+      return home;
+    }
   }
 
   @override
@@ -52,7 +58,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(title: Text('Black Tax White Benefits')),
         body: Center(
-          child: _tabContent[_selectedIndex] ,
+          child: _buildFavoritesWidget(_selectedIndex),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
@@ -87,9 +93,13 @@ class ArticleFutureBuilder extends StatelessWidget {
       future: posts,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
+          debugPrint("Connection state not done");
           return CircularProgressIndicator();
         }
-        if (snapshot.hasData) {
+        debugPrint("Connection state done");
+
+        if (snapshot.hasData && snapshot.data.isNotEmpty) {
+          debugPrint("has data-data not null");
           return ListView.builder(
               itemCount: snapshot.data.length,
               padding: const EdgeInsets.all(8.0),
@@ -97,9 +107,10 @@ class ArticleFutureBuilder extends StatelessWidget {
           );
         } else if (snapshot.hasError) {
           debugPrint("Has Error ${snapshot.error}");
-          return Text('No articles or error loading articles.');
+          return Center(child:Text('No articles or error loading articles.'));
         } else {
-          return Text('No favorites');
+          debugPrint("No favorites");
+          return Center(child:Text('Tap the star to save an article!'));
         }
       },
     );
@@ -113,23 +124,27 @@ class PostCard extends StatelessWidget {
   PostCard({Key key, this.post}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Card(
-      child: Column(
-        children: <Widget>[
-          CachedNetworkImage(
-            imageUrl: post.imageUrl,
-            placeholder: (context, url) => new CircularProgressIndicator(),
-            errorWidget: (context, url, error) => new Image.network('http://blacktaxandwhitebenefits.com/wp-content/uploads/2016/11/hand-1917895_1920.jpg'),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top:8),
-            child: ListTile(
-              title: Text(post.title),
-              subtitle: Html(data: post.excerpt),
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(post: post))),
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(post: post))),
+      child: Card(
+        child: Column(
+          children: <Widget>[
+            CachedNetworkImage(
+              imageUrl: post.imageUrl,
+              placeholder: (context, url) => new CircularProgressIndicator(),
+              errorWidget: (context, url, error) => new Image.network('http://blacktaxandwhitebenefits.com/wp-content/uploads/2016/11/hand-1917895_1920.jpg'),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top:8),
+              child: ListTile(
+                title: Text(post.title),
+                subtitle: Html(data: post.excerpt),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
 }

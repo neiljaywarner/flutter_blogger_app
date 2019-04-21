@@ -22,6 +22,11 @@ class DBProvider {
   Future<List<Post>> getAllFavorites() async {
     final db = await database;
     var results = await db.query("favorites");
+    if (results.isEmpty) {
+      print("favorites table in db is empty");
+    } else {
+      print("Found ${results.length} favorites");
+    }
     return results.isNotEmpty ? results.map((c) => Post.fromMap(c)).toList() : [];
   }
 
