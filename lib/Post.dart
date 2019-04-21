@@ -6,7 +6,7 @@ class PostResponse {
   PostResponse(this.posts);
 
   factory PostResponse.fromJson(List<dynamic> parsedJson) => PostResponse(parsedJson.map((i)=>Post.fromJson(i)).toList());
-
+  static List<Post> getPosts(List<dynamic> parsedJson) => PostResponse.fromJson(parsedJson).posts;
 }
 
 class Post {

@@ -7,13 +7,14 @@ import 'package:flutter_blogger_app/article_detail.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_html/flutter_html.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_blogger_app/DbProvider.dart';
 
-Future<PostResponse> fetchPost() async {
+Future<List<Post>> fetchPost() async {
   final response = await http.get('http://blacktaxandwhitebenefits.com/wp-json/wp/v2/posts?per_page=100');
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
-    return PostResponse.fromJson(json.decode(response.body));
+    return PostResponse.getPosts(json.decode(response.body));
   } else {
     // If that call was not successful, throw an error.
     //todo: fimber and crashlytics
@@ -24,7 +25,7 @@ Future<PostResponse> fetchPost() async {
 void main() => runApp(MyApp(posts: fetchPost()));
 
 class MyApp extends StatefulWidget {
-  final Future<PostResponse> posts;
+  final Future<List<Post>> posts;
 
   MyApp({Key key, this.posts}) : super(key: key);
 
@@ -33,7 +34,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   List<Widget> _tabContent = <Widget>[];
 
 
@@ -41,8 +42,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _tabContent.add(ArticleFutureBuilder(posts: widget.posts));
-    _tabContent.add(Center(child: Text("No favorites at this time.")));
+    _tabContent.add(ArticleFutureBuilder(posts: DBProvider.db.getAllFavorites()));
   }
+
   @override
   Widget build(BuildContext context) => MaterialApp(
       title: 'Black Tax White Benefits',
@@ -77,28 +79,28 @@ class ArticleFutureBuilder extends StatelessWidget {
     @required this.posts,
   }) : super(key: key);
 
-  final Future<PostResponse> posts;
+  final Future<List<Post>> posts;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PostResponse>(
+    return FutureBuilder<List<Post>>(
       future: posts,
       builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return CircularProgressIndicator();
+        }
         if (snapshot.hasData) {
-          int length = snapshot.data.posts.length;
-          debugPrint("has data: length=$length");
           return ListView.builder(
-              itemCount: snapshot.data.posts.length,
+              itemCount: snapshot.data.length,
               padding: const EdgeInsets.all(8.0),
-              itemBuilder: (BuildContext _context, int i) => PostCard(post: snapshot.data.posts[i])
+              itemBuilder: (BuildContext _context, int i) => PostCard(post: snapshot.data[i])
           );
         } else if (snapshot.hasError) {
           debugPrint("Has Error ${snapshot.error}");
-          return Text('Error loading posts.');
+          return Text('No articles or error loading articles.');
+        } else {
+          return Text('No favorites');
         }
-
-        // By default, show a loading spinner
-        return CircularProgressIndicator();
       },
     );
   }
