@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_blogger_app/FavoritesList.dart';
+import 'package:flutter_blogger_app/DbProvider.dart';
 import 'package:flutter_blogger_app/Post.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:localstorage/localstorage.dart';
-import 'dart:convert';
+
 
 
 class DetailScreen extends StatefulWidget {
@@ -20,7 +20,6 @@ class DetailScreen extends StatefulWidget {
 
 
 class _DetailScreenState extends State<DetailScreen> {
-  final LocalStorage storage = new LocalStorage('btwb151');
   var _shareMessage;
   List<String> favorites = List<String>();
 
@@ -35,14 +34,14 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder<bool>(
-      future: storage.ready,
+  Widget build(BuildContext context) => FutureBuilder<Post>(
+      future: DBProvider.db.getNote(widget.post.id),
       builder: (context, snapshot) {
-        if (storage.getItem("my_favorites") != null)  {
-          favorites = storage.getItem("my_favorites");
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Container();
         }
-        length = favorites.length;
-        print('num favorites=$length');
+
+        bool isFavorite = snapshot.hasData;
         return Scaffold(
           appBar: AppBar(
               title: Text("Black Tax White Benefits $length"),
@@ -52,8 +51,8 @@ class _DetailScreenState extends State<DetailScreen> {
                   onPressed: () => Share.share(_shareMessage),
                 ),
                 IconButton(
-                  icon: Icon(Icons.star),
-                  onPressed: () => toggleFavorite(widget.post),
+                  icon: isFavorite ? Icon(Icons.star) : Icon(Icons.star_border),
+                  onPressed: () => toggleFavorite(widget.post, isFavorite),
                   // TODO: border star if already favorites
                 ),
               ]),
@@ -85,21 +84,11 @@ class _DetailScreenState extends State<DetailScreen> {
       }
     );
 
-  void toggleFavorite(Post post) async {
-    await storage.ready;
-    if (favorites.contains(post.slug)) {
-      print("remove b/c favorites has post ${post.slug}");
-      favorites.remove(post.slug);
+  void toggleFavorite(Post post, bool isCurrentlyFavorite) async {
+    if (isCurrentlyFavorite) {
+      await DBProvider.db.unFavorite(post);
     } else {
-      print("add b/c favorites does not have post ${post.slug}");
-      favorites.add(post.slug);
-    }
-    if (favorites.length==0) {
-      print("favorites empty; clear storage");
-      storage.clear();
-    } else {
-      print("About to set my favorites to $favorites}");
-      storage.setItem("my_favorites", favorites);
+      await DBProvider.db.favorite(post);
     }
     setState(() {
       print("rebuilding after toggling favorite");
