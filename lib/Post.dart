@@ -5,22 +5,25 @@ class PostResponse {
 
   PostResponse(this.posts);
 
-  factory PostResponse.fromJson(List<dynamic> parsedJson) => new PostResponse(parsedJson.map((i)=>Post.fromJson(i)).toList());
+  factory PostResponse.fromJson(List<dynamic> parsedJson) => PostResponse(parsedJson.map((i)=>Post.fromJson(i)).toList());
+  static List<Post> getPosts(List<dynamic> parsedJson) => PostResponse.fromJson(parsedJson).posts;
 }
 
 class Post {
+  final int id;
   final String excerpt;
   final String title;
   final String link;
   final String imageUrl;
   final String content;
 
-  Post({this.excerpt, this.title, this.link, this.imageUrl, this.content});
+  Post({this.id, this.excerpt, this.title, this.link, this.imageUrl, this.content});
 
   // TODO: Consider when to embed if ever?
   // eg is jetpack_featured_media_url good enough
   // or we could use smaller images for thumbnails...
   factory Post.fromJson(Map<String, dynamic> json) {
+    int id = json['id'];
     String excerpt = json['excerpt']['rendered'] ?? "";
     String title = json['title']['rendered'];
     String content = json['content']['rendered'];
@@ -28,6 +31,7 @@ class Post {
     excerpt = HtmlUnescape().convert(excerpt);
     content = HtmlUnescape().convert(content);
     return Post(
+      id: id,
       title: title,
       excerpt: excerpt,
       link: json['link'],
@@ -35,4 +39,21 @@ class Post {
       content: content
     );
   }
+
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'title': title,
+        'excerpt': excerpt,
+        'imageUrl': imageUrl,
+        'content': content
+      };
+
+  factory Post.fromMap(Map<String, dynamic> map) => Post(
+      id: map['id'],
+      title: map['title'],
+      excerpt: map['excerpt'],
+      link: map['link'],
+      imageUrl: map['imageUrl'],
+      content: map['content']
+    );
 }
