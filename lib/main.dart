@@ -53,6 +53,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Black Tax White Benefits',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
@@ -110,7 +111,7 @@ class ArticleFutureBuilder extends StatelessWidget {
           return Center(child:Text('No articles or error loading articles.'));
         } else {
           debugPrint("No favorites");
-          return Center(child:Text('Tap the star to save an article!'));
+          return Center(child:Text('Star an article an it will show up here!'));
         }
       },
     );
