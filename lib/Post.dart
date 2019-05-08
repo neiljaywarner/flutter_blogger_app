@@ -44,6 +44,7 @@ class Post {
         'id': id,
         'title': title,
         'excerpt': excerpt,
+        'link': link,
         'imageUrl': imageUrl,
         'content': content
       };
