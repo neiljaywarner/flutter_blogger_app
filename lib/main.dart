@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blogger_app/DbProvider.dart';
 import 'package:flutter_blogger_app/Post.dart';
 import 'package:flutter_blogger_app/article_detail.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_html/flutter_html.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_blogger_app/DbProvider.dart';
+import 'package:http/http.dart' as http;
 
 Future<List<Post>> fetchPost() async {
   final response = await http.get('http://blacktaxandwhitebenefits.com/wp-json/wp/v2/posts?per_page=100');
@@ -43,9 +43,11 @@ class _MyAppState extends State<MyApp> {
     home = ArticleFutureBuilder(posts: widget.posts);
   }
 
-  ArticleFutureBuilder _buildFavoritesWidget(int selectedIndex) {
+  Widget _buildFavoritesWidget(int selectedIndex) {
     if (selectedIndex==1) {
       return ArticleFutureBuilder(posts: DBProvider.db.getAllFavorites());
+    } else if (selectedIndex == 2) {
+      return AboutPage();
     } else {
       return home;
     }
@@ -65,6 +67,7 @@ class _MyAppState extends State<MyApp> {
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
             BottomNavigationBarItem(icon: Icon(Icons.star), title: Text('Favorites')),
+            BottomNavigationBarItem(icon: Icon(Icons.info), title: Text('About')),
           ],
           currentIndex: _selectedIndex,
           fixedColor: Theme.of(context).accentColor,
@@ -146,6 +149,23 @@ class PostCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AboutPage extends StatelessWidget {
+
+  var resourcesHtml = '''
+    You can visit his website at <a href='gordonferguson.org'>gordonferguson.org</a>
+    and buy his books at <a href="www.ipi.com">Illumination Publishers</a> or <a href="www.google.com">Amazon</a>
+    ''';
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Container(
+      padding: EdgeInsets.all(12),
+      child: Html(data: resourcesHtml),
     );
   }
 }
