@@ -8,6 +8,7 @@ import 'package:flutter_blogger_app/Post.dart';
 import 'package:flutter_blogger_app/article_detail.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 Future<List<Post>> fetchPost() async {
   final response = await http.get('http://blacktaxandwhitebenefits.com/wp-json/wp/v2/posts?per_page=100');
@@ -143,7 +144,7 @@ class PostCard extends StatelessWidget {
               padding: const EdgeInsets.only(top:8),
               child: ListTile(
                 title: Text(post.title),
-                subtitle: Html(data: post.excerpt),
+                subtitle: Html(data: post.excerpt,),
               ),
             ),
           ],
@@ -155,9 +156,14 @@ class PostCard extends StatelessWidget {
 
 class AboutPage extends StatelessWidget {
 
-  var resourcesHtml = '''
-    You can visit his website at <a href='gordonferguson.org'>gordonferguson.org</a>
-    and buy his books at <a href="www.ipi.com">Illumination Publishers</a> or <a href="www.google.com">Amazon</a>
+  final resourcesHtml = '''
+  <img src="http://gordonferguson.org/wp-content/uploads/2016/11/Final-Main-Header.jpg"/>
+  <ul>
+    <li><a href='http://gordonferguson.org'>gordonferguson.org</a></li>
+    <li><a href="https://ipibooks.ecwid.com/#!/Gordon-Ferguson/c/18671194/offset=0&sort=nameAsc">Books, videos (ipi)</a></li>
+    <li><a href="mailto://gordonferguson33@gmail.com">Contact</a></li>
+    </a></li>
+    </ul>
     ''';
 
   @override
@@ -165,7 +171,7 @@ class AboutPage extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(12),
-      child: Html(data: resourcesHtml),
+      child: Html(data: resourcesHtml, onLinkTap: (String url) => launch(url, forceSafariVC: false),),
     );
   }
 }
