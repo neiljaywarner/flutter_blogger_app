@@ -23,10 +23,16 @@ class Post {
   // eg is jetpack_featured_media_url good enough
   // or we could use smaller images for thumbnails...
   factory Post.fromJson(Map<String, dynamic> json) {
+    String content = json['content']['rendered'];
+    content = content.replaceAll("<em>", "'");
+    content = content.replaceAll("</em>", "'");
+    content = content.replaceAll("<sup>", "");
+    content = content.replaceAll("</sup>", "");
+
+
     int id = json['id'];
     String excerpt = json['excerpt']['rendered'] ?? "";
     String title = json['title']['rendered'];
-    String content = json['content']['rendered'];
     title = HtmlUnescape().convert(title);
     excerpt = HtmlUnescape().convert(excerpt);
     content = HtmlUnescape().convert(content);
