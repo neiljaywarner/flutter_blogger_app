@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_blogger_app/DbProvider.dart';
 import 'package:flutter_blogger_app/Post.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -41,7 +40,7 @@ class _DetailScreenState extends State<DetailScreen> {
         bool isFavorite = snapshot.hasData;
         return Scaffold(
           appBar: AppBar(
-              title: Text("Black Tax White Benefits $length"),
+              title: Text("gordonferguson.org"),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.share),
@@ -59,11 +58,6 @@ class _DetailScreenState extends State<DetailScreen> {
                   Card(
                     child: Column(
                       children: <Widget>[
-                        CachedNetworkImage(
-                          imageUrl: widget.post.imageUrl,
-                          placeholder: (context, url) => CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Image.network('http://blacktaxandwhitebenefits.com/wp-content/uploads/2016/11/hand-1917895_1920.jpg'),
-                        ),
                         Padding(
                             padding: EdgeInsets.all(8.0),
                             child: new Text(

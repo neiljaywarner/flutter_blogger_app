@@ -30,7 +30,6 @@ dependencies:
   # which is better, can we get one official, etc.
   flutter_html: ^0.9.6
   url_launcher: ^5.0.2
-  cached_network_image: ^0.7.0
   share: ^0.5.3
   sqflite: ^1.1.5
 
