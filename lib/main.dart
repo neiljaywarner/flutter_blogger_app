@@ -57,10 +57,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) => MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Black Tax White Benefits',
+      title: 'Gordon Ferguson',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
-        appBar: AppBar(title: Text('Black Tax White Benefits')),
+        appBar: AppBar(title: Text('Gordon Ferguson')),
         body: Center(
           child: _buildFavoritesWidget(_selectedIndex),
         ),
