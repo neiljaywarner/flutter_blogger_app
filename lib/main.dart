@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 Future<List<Post>> fetchPost() async {
-  final response = await http.get('http://blacktaxandwhitebenefits.com/wp-json/wp/v2/posts?per_page=100');
+  final response = await http.get('http://gordonferguson.org/wp-json/wp/v2/posts?per_page=100');
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
@@ -19,7 +19,7 @@ Future<List<Post>> fetchPost() async {
   } else {
     // If that call was not successful, throw an error.
     //todo: fimber and crashlytics
-    throw Exception('Failed to load posts');
+    throw Exception('Failed to load posts:' + response.statusCode.toString());
   }
 }
 
@@ -104,7 +104,7 @@ class ArticleFutureBuilder extends StatelessWidget {
         debugPrint("Connection state done");
 
         if (snapshot.hasData && snapshot.data.isNotEmpty) {
-          debugPrint("has data-data not null");
+          debugPrint("has data-data not null: numPosts=" + snapshot.data.length.toString());
           return ListView.builder(
               itemCount: snapshot.data.length,
               padding: const EdgeInsets.all(8.0),
@@ -135,11 +135,6 @@ class PostCard extends StatelessWidget {
       child: Card(
         child: Column(
           children: <Widget>[
-            CachedNetworkImage(
-              imageUrl: post.imageUrl,
-              placeholder: (context, url) => new CircularProgressIndicator(),
-              errorWidget: (context, url, error) => new Image.network('http://blacktaxandwhitebenefits.com/wp-content/uploads/2016/11/hand-1917895_1920.jpg'),
-            ),
             Padding(
               padding: const EdgeInsets.only(top:8),
               child: ListTile(
